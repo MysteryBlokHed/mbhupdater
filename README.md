@@ -57,6 +57,6 @@ Pretty easy to guess what they do, they just use the variable names in the funct
 All functions have descriptions that will show up in IDEs.
 
 ### Other functions
-        # Other functions
-        compare_versions() - Returns True if the versions match and False if the local one is out of date.
-        read_files()       - Reads the content of the version files. Must use before get_local_version() or get_latest_version()
+    # Other functions
+    compare_versions() - Returns True if the versions match and False if the local one is out of date.
+    read_files()       - Reads the content of the version files. Must use before get_local_version() or get_latest_version()
