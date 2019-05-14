@@ -6,7 +6,9 @@ This is a fairly simple program that will copy files from online and keep the fi
 
 ## Requirements
 **Python v3+**  
-If you don't already have it, download it [here](https://www.python.org/downloads/).
+If you don't already have it, download it [here](https://www.python.org/downloads/).  
+**tqdm is you're using tqdm_updater**  
+Download using `pip install tqdm`, or download the latest wheel [here](https://pypi.org/project/tqdm/#files) and use `pip install (.whl file)`.
 
 ## Documentation
 ### Updater class
@@ -29,9 +31,14 @@ What each class variable means.
         """
 
 ### Initialize the updater
+##### Standard
     import mbhupdater.updater
 
-    updater = mbh.updater.Updater()
+    updater = mbhupdater.updater.Updater()
+##### tqdm (Progress Bar)
+    import mbhupdater.tqdm_updater
+
+    updater = mbhupdater.tqdm_updater.TQDMUpdater()
 
 ### Pull the new files
 Pull without comparing versions:  
