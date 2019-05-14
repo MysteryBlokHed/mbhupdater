@@ -107,17 +107,19 @@ class Updater(object):
         # Does different things if the latest version file is a url or not.
         if self._latesturl:
             latest = urllib.request.urlopen(self._latest_version_file)
-            self._latest_version = latest.read()
+            self._latest_version = latest.readlines()[0]
         else:
             latest = open(self._latest_version_file, "r")
-            self._latest_version = latest.readlines()
+            self._latest_version = latest.readlines()[0]
             latest.close()
         
-        self._local_version = local.readlines()
+        self._local_version = local.readlines()[0]
         local.close()
     
     def compare_versions(self):
         """Returns True if the versions match, and False if they don't. Throws an error if the local version is newer."""
+        self.read_files()
+
         if float(self._latest_version) == float(self._local_version):
             return True
         elif float(self._latest_version) > float(self._local_version):
