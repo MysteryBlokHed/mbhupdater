@@ -143,19 +143,28 @@ class Updater(object):
                 # Read the file line-by-line
                 lines = urllib.request.urlopen(self._new_files[i]).readlines()
                 print("Read file from {}".format(fname))
-                # Decode.
-                j = 0
-                for line in lines:
-                    try:
-                        lines[j] = line.decode("utf-8")
-                        j+=1
-                        print("Decoded line {} of {}.".format(j+1, fname), end="\r")
-                    # If it's already a string
-                    except AttributeError:
-                        pass
+                # Whether or not the file is stored as bytes
+                b = False
+                # # Decode.
+                # j = 0
+                # for line in lines:
+                    # try:
+                    #     lines[j] = line.decode("utf-8")
+                    #     j+=1
+                    #     print("Decoded line {} of {}.".format(j+1, fname), end="\r")
+                    # # If it's already a string
+                    # except AttributeError:
+                    #     pass
+                if type(lines[0]) is bytes:
+                    print("{} is of type bytes.".format(fname))
+                    b = True
                 # Write the contents of the new file to the working directory.
                 print("\nWriting file from {}...".format(fname))
-                f = open(fname, "w+")
+                # Opens the file differently if it is of type bytes.
+                if b:
+                    f = open(fname, "wb+")
+                else:
+                    f = open(fname, "w+")
                 f.writelines(lines)
                 print("Wrote file {}.".format(fname))
                 i+=1
