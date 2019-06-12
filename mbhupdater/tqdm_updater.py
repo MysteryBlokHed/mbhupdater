@@ -24,9 +24,13 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                 print(" Read file from {}".format(fname))
                 # Whether or not the file is stored as bytes
                 b = False
-                if type(lines[0]) is bytes:
-                    print("{} is of type bytes.".format(fname))
-                    b = True
+                # Sometimes breaks, but from testing it seems fine to skip.
+                try:
+                    if type(lines[0]) is bytes:
+                        print("{} is of type bytes.".format(fname))
+                        b = True
+                except:
+                    pass
                 # Write the contents of the new file to the working directory.
                 print("\nWriting file {}...".format(fname))
                 # Opens the file differently if it is of type bytes.
