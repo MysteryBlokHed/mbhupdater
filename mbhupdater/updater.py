@@ -17,7 +17,9 @@ class Updater(object):
 
     _new_filesurl = True
 
-    def __init__(self, local_version_file="version.txt", latest_version_file="new_version.txt", latesturl=False, new_files=[], new_filesurl=True):
+    _output = True
+
+    def __init__(self, local_version_file="version.txt", latest_version_file="new_version.txt", latesturl=False, new_files=[], new_filesurl=True, output=True):
         # Verify the type of local_version_file
         if type(local_version_file) is str:
             self._local_version_file = local_version_file
@@ -43,6 +45,11 @@ class Updater(object):
             self._new_filesurl = new_filesurl
         else:
             raise TypeError("Expected boolean for new_filesurl, got {}.".format(type(new_filesurl)))
+        # Verify the type of output
+        if type(output) is bool:
+            self._output = output
+        else:
+            raise TypeError("Expected boolean for output, got {}.".format(type(output)))
     
     def get_local_version_file(self):
         """Returns the location of the local version file."""
@@ -56,6 +63,10 @@ class Updater(object):
         """Returns a boolean of whether or not latest_version_file contains a URL."""
         return self._latesturl
     
+    def get_output_status(self):
+        """Returns a boolean of whether or not to print to screen."""
+        return self._output
+    
     def get_new_filesurl_status(self):
         """Returns a boolean of whether or not the new files that (might) need copying are URLs."""
         return self._new_filesurl
@@ -64,11 +75,6 @@ class Updater(object):
         """Returns the version of the local files.
         Must use read_files() first."""
         return self._local_version
-    
-    def get_local_version(self):
-        """Returns the version of the latest files.
-        Must use read_files() first."""
-        return self._latest_version
     
     def set_local_version_file(self, local_version_file):
         """Set the location of the local version file."""
@@ -93,11 +99,17 @@ class Updater(object):
     
     def toggle_new_filesurl(self):
         """Toggles the boolean of whether or not the new files that (might) need copying are URLs."""
+        local = open(self._local_version_file, "r")
         # Simple toggle for booleans
         self._new_filesurl = not self._new_filesurl
         
         self._local_version = local.readlines()
         local.close()
+    
+    def toggle_output(self):
+        """Toggles the boolean of whether or not to print progress to screen."""
+        # Simple toggle for booleans
+        self._output = not self._output
     
     def read_files(self):
         """Reads the version files to ready them for comparison.
@@ -132,7 +144,8 @@ class Updater(object):
         Pulls all files to the working directory."""
         # Does different things if the new files are online or not.
         if self._new_filesurl:
-            print("Files are online.")
+            if self._output:
+                print("Files are online.")
             i = 0
             # For each new file in array
             for item in self._new_files:
@@ -142,40 +155,47 @@ class Updater(object):
                 os.makedirs(os.path.dirname(fname), exist_ok=True)
                 # Read the file line-by-line
                 lines = urllib.request.urlopen(item).readlines()
-                print("Read file from {}".format(fname))
+                if self._output:
+                    print("Read file from {}".format(fname))
                 # Whether or not the file is stored as bytes
                 b = False
                 # Sometimes breaks, but from testing it seems fine to skip.
                 try:
                     if type(lines[0]) is bytes:
-                        print("{} is of type bytes.".format(fname))
+                        if self._output:
+                            print("{} is of type bytes.".format(fname))
                         b = True
                 except:
                     pass
                 # Write the contents of the new file to the working directory.
-                print("\nWriting file {}...".format(fname))
+                if self._output:
+                    print("\nWriting file {}...".format(fname))
                 # Opens the file differently if it is of type bytes.
                 if b:
                     f = open(fname, "wb+")
                 else:
                     f = open(fname, "w+")
                 f.writelines(lines)
-                print("Wrote file {}.".format(fname))
+                if self._output:
+                    print("Wrote file {}.".format(fname))
                 i+=1
         else:
-            print("Files are offline.")
+            if self._output:
+                print("Files are offline.")
             i = 0
             # For each new file in array
             for item in self._new_files:
                 fname = item.split("/")[-1:][0]
                 # Read the file line-by-line
                 lines = open(item, "r").readlines()
-                print("Read file from {}".format(fname))
+                if self._output:
+                    print("Read file from {}".format(fname))
                 # Write the contents of the new file to the working directory.
 
                 f = open(fname, "w+")
                 f.writelines(lines)
-                print("Wrote file {}.".format(fname))
+                if self._output:
+                    print("Wrote file {}.".format(fname))
                 f.close()
     
     def compare_and_pull(self):
@@ -183,10 +203,12 @@ class Updater(object):
         self.read_files()
 
         if not self.compare_versions():
-            print("Outdated version detected. Updating...")
+            if self._output:
+                print("Outdated version detected. Updating...")
             self.pull_files()
             f = open(self._local_version_file, "w+")
             f.writelines(self._latest_version)
             f.close()
         else:
-            print("Files are up to date.")
+            if self._output:
+                print("Files are up to date.")

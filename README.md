@@ -19,7 +19,7 @@ What each class variable means.
     def __init__(local_version_file="version.txt",
                 latest_version_file="new_version.txt",
                 latesturl=False, new_files=[],
-                new_filesurl=True)
+                new_filesurl=True, output=True)
         """
         local_version_file: The downloaded version of the software.
         Should contain a number, like 1, 1.2, 1.234.
@@ -28,6 +28,7 @@ What each class variable means.
         latesturl: Boolean. Whether or not the file stored at latest_version_file is a url.
         new_files: Array. Contains the location of the files to update if the versions don't match.
         new_filesurl: Boolean. Whether or not the items listed in new_files are urls.
+        output: Boolean. Whether or not to write to screen. Ignored for TQDMUpdater.
         """
 
 ### Initialize the updater
@@ -54,6 +55,7 @@ Pretty easy to guess what they do, they just use the variable names in the funct
     get_latest_version_file()
     get_latesturl_status()
     get_new_filesurl_status()
+    get_output_status()
     get_local_version()
     get_latest_version()
     # Setters
@@ -61,6 +63,7 @@ Pretty easy to guess what they do, they just use the variable names in the funct
     set_latest_version_file(latest_version_file)
     toggle_latesturl()
     toggle_new_filesurl()
+    toggle_output()
 All functions have descriptions that will show up in IDEs.
 
 ### Other functions
