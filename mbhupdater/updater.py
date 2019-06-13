@@ -175,6 +175,7 @@ class Updater(object):
 
                 f = open(fname, "w+")
                 f.writelines(lines)
+                print("Wrote file {}.".format(fname))
                 f.close()
     
     def compare_and_pull(self):
