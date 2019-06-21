@@ -9,6 +9,23 @@ class TQDMUpdater(mbhupdater.updater.Updater):
     def pull_files(self):
         """Not recommended unless you don't want to update the version file locally.
         Pulls all files to the working directory."""
+        # Import the source file, if enabled.
+        if self._source_file_enabled:
+            # Does different things if the source file is online or not.
+            if self._source_fileurl:
+                # Read the file line-by-line
+                self._new_files = urllib.request.urlopen(self._source_file).readlines()
+            else:
+                # Read the file line-by-line
+                f = open(self._source_file)
+                lines = f.readlines()
+                print(lines)
+                for i in range(0, len(lines)):
+                    if lines[i][-1:] == "\n":
+                        lines[i] = lines[i][:-1]
+                self._new_files = lines
+                print(self._new_files)
+
         # Does different things if the new files are online or not.
         if self._new_filesurl:
             tqdm.write("Files are online.")
