@@ -1,5 +1,6 @@
 # MBH Updater
 A Python script designed for frontend updating of files.
+Not for use as a GIT alternative for backend programming.
 
 ## Overview
 This is a fairly simple program that will copy files from online and keep the file structure. For example, if you have `/path/to/file/code.txt` and `/path/to/code.txt`, it will keep those files in those folders locally.
@@ -52,6 +53,8 @@ Pull without comparing versions:
     `updater.pull_files()`  
 Pull if local version is outdated:  
     `updater.compare_and_pull()`  
+
+When you are pulling files from online, you MUST include the `http://` or `https://` part of the URL in the sources list, otherwise there may be errors in both pulling the file from online, and writing the files locally.
 
 ### Example source file
 There is an optional source file feature in the updater.
