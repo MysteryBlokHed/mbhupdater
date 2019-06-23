@@ -66,8 +66,8 @@ If you're using it, this is how you would format it:
     /local/path/to/file.txt
     /local/path/to/file2.txt
     /old/thing/file.txt
-Make sure to include the 'http' for online files, otherwise it will not output to the correct folder and may crash.  
-Any files under the \[DELETE\] tag will be deleted instead of updated/created. The path must be a local file, not a URL.
+Make sure to include the `http://` or `https://` for online files, otherwise it will not output to the correct folder and may crash.  
+Any files under the `[DELETE]` tag will be deleted instead of updated/created. The path for deletion must be a local file, not a URL.
 
 ### Getters and setters
 Pretty easy to guess what they do, they just use the variable names in the functions. Here's a list:
