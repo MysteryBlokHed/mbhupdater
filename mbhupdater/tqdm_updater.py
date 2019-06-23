@@ -26,37 +26,43 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                 self._new_files = lines
                 print(self._new_files)
 
+        delete = False
+        files_to_delete = []
         # Does different things if the new files are online or not.
         if self._new_filesurl:
             tqdm.write("Files are online.")
-            i = 0
             # For each new file in array
             for i in tqdm(range(len(self._new_files))):
-                # Set the target location to output to
-                fname = self._new_files[i].split("/", 3)[-1:][0]
-                # Create the directories for the file if they don't exist
-                os.makedirs(os.path.dirname(fname), exist_ok=True)
-                # Read the file line-by-line
-                lines = urllib.request.urlopen(self._new_files[i]).readlines()
-                tqdm.write(" Read file from {}".format(fname))
-                # Whether or not the file is stored as bytes
-                b = False
-                # Sometimes breaks, but from testing it seems fine to skip.
-                try:
-                    if type(lines[0]) is bytes:
-                        tqdm.write("{} is of type bytes.".format(fname))
-                        b = True
-                except:
-                    pass
-                # Write the contents of the new file to the working directory.
-                tqdm.write("\nWriting file {}...".format(fname))
-                # Opens the file differently if it is of type bytes.
-                if b:
-                    f = open(fname, "wb+")
+                if self._new_files[i][:8] == "[DELETE]":
+                    delete = True
+                if not delete:
+                    # Set the target location to output to
+                    fname = self._new_files[i].split("/", 3)[-1:][0]
+                    # Create the directories for the file if they don't exist
+                    os.makedirs(os.path.dirname(fname), exist_ok=True)
+                    # Read the file line-by-line
+                    lines = urllib.request.urlopen(self._new_files[i]).readlines()
+                    tqdm.write(" Read file from {}".format(fname))
+                    # Whether or not the file is stored as bytes
+                    b = False
+                    # Sometimes breaks, but from testing it seems fine to skip.
+                    try:
+                        if type(lines[0]) is bytes:
+                            b = True
+                    except:
+                        pass
+                    # Write the contents of the new file to the working directory.
+                    tqdm.write("\nWriting file {}...".format(fname))
+                    # Opens the file differently if it is of type bytes.
+                    if b:
+                        f = open(fname, "wb+")
+                    else:
+                        f = open(fname, "w+")
+                    f.writelines(lines)
+                    tqdm.write("Wrote file {}.".format(fname))
                 else:
-                    f = open(fname, "w+")
-                f.writelines(lines)
-                tqdm.write("Wrote file {}.".format(fname))
+                    if not self._new_files[i][:8] == "[DELETE]":
+                        files_to_delete.append(self._new_files[i])
         else:
             tqdm.write("Files are offline.")
             # For each new file in array
@@ -68,7 +74,6 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                 # Whether or not the file is stored as bytes
                 b = False
                 if type(lines[0]) is bytes:
-                    tqdm.write("{} is of type bytes.".format(fname))
                     b = True
                 # Write the contents of the new file to the working directory.
                 tqdm.write("\nWriting file from {}...".format(fname))
@@ -79,3 +84,9 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     f = open(fname, "w+")
                 f.writelines(lines)
                 tqdm.write("Wrote file {}.".format(fname))
+        # Delete the files marked
+        tqdm.write("Deletinng old files...")
+        for i in tqdm(range(len(files_to_delete))):
+            if os.path.isfile(files_to_delete[i]):
+                tqdm.write("Deleting file {}...".format(files_to_delete[i]))
+                os.remove(files_to_delete[i])

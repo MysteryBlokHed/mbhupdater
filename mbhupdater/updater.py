@@ -215,48 +215,53 @@ class Updater(object):
                 self._new_files = lines
                 print(self._new_files)
 
+        delete = False
+        files_to_delete = []
         # Does different things if the new files are online or not.
         if self._new_filesurl:
             if self._output:
                 print("Files are online.")
-            i = 0
             # For each new file in array
             for item in self._new_files:
-                print(item)
-                # Set the target location to output to
-                fname = item.split("/", 3)[-1:][0]
-                # Create the directories for the file if they don't exist
-                os.makedirs(os.path.dirname(fname), exist_ok=True)
-                # Read the file line-by-line
-                lines = urllib.request.urlopen(item).readlines()
                 if self._output:
-                    print("Read file from {}".format(fname))
-                # Whether or not the file is stored as bytes
-                b = False
-                # Sometimes breaks, but from testing it seems fine to skip.
-                try:
-                    if type(lines[0]) is bytes:
-                        if self._output:
-                            print("{} is of type bytes.".format(fname))
-                        b = True
-                except:
-                    pass
-                # Write the contents of the new file to the working directory.
-                if self._output:
-                    print("\nWriting file {}...".format(fname))
-                # Opens the file differently if it is of type bytes.
-                if b:
-                    f = open(fname, "wb+")
+                    print(item)
+                # Check if the files listed should be deleted
+                if item[:8] == "[DELETE]":
+                    delete = True
+                if not delete:
+                    # Set the target location to output to
+                    fname = item.split("/", 3)[-1:][0]
+                    # Create the directories for the file if they don't exist
+                    os.makedirs(os.path.dirname(fname), exist_ok=True)
+                    # Read the file line-by-line
+                    lines = urllib.request.urlopen(item).readlines()
+                    if self._output:
+                        print("Read file from {}".format(fname))
+                    # Whether or not the file is stored as bytes
+                    b = False
+                    # Sometimes breaks, but from testing it seems fine to skip.
+                    try:
+                        if type(lines[0]) is bytes:
+                            b = True
+                    except:
+                        pass
+                    # Write the contents of the new file to the working directory.
+                    if self._output:
+                        print("\nWriting file {}...".format(fname))
+                    # Opens the file differently if it is of type bytes.
+                    if b:
+                        f = open(fname, "wb+")
+                    else:
+                        f = open(fname, "w+")
+                    f.writelines(lines)
+                    if self._output:
+                        print("Wrote file {}.".format(fname))
                 else:
-                    f = open(fname, "w+")
-                f.writelines(lines)
-                if self._output:
-                    print("Wrote file {}.".format(fname))
-                i+=1
+                    if not item[:8] == "[DELETE]":
+                        files_to_delete.append(item)
         else:
             if self._output:
                 print("Files are offline.")
-            i = 0
             # For each new file in array
             for item in self._new_files:
                 fname = item.split("/")[-1:][0]
@@ -270,6 +275,14 @@ class Updater(object):
                 if self._output:
                     print("Wrote file {}.".format(fname))
                 f.close()
+        # Delete the files marked
+        if self._output:
+            print("Deleting old files...")
+        for item in files_to_delete:
+            if os.path.isfile("./"+item):
+                if self._output:
+                    print("Deleting file {}...".format(item))
+                os.remove("./"+item)
     
     def compare_and_pull(self):
         """Compares the versions. If the current version is older, it will update the current files.
