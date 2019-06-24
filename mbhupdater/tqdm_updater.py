@@ -87,6 +87,6 @@ class TQDMUpdater(mbhupdater.updater.Updater):
         # Delete the files marked
         tqdm.write("Deletinng old files...")
         for i in tqdm(range(len(files_to_delete))):
-            if os.path.isfile(files_to_delete[i]):
+            if os.path.isfile("./"+files_to_delete[i]):
                 tqdm.write("Deleting file {}...".format(files_to_delete[i]))
-                os.remove(files_to_delete[i])
+                os.remove("./"+files_to_delete[i])
