@@ -19,12 +19,10 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                 # Read the file line-by-line
                 f = open(self._source_file)
                 lines = f.readlines()
-                print(lines)
                 for i in range(0, len(lines)):
                     if lines[i][-1:] == "\n":
                         lines[i] = lines[i][:-1]
                 self._new_files = lines
-                print(self._new_files)
 
         delete = False
         files_to_delete = []
@@ -37,7 +35,7 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     delete = True
                 if not delete:
                     # Set the target location to output to
-                    fname = self._new_files[i].split("/", 3)[-1:][0]
+                    fname = self._new_files[i].split("/", 3+self._files_offset)[-1:][0]
                     # Create the directories for the file if they don't exist
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     # Read the file line-by-line

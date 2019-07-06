@@ -17,6 +17,9 @@ class Updater(object):
     # Location of the source file (if enabled)
     _source_file = ""
 
+    # Offset thing
+    _files_offset = 3
+
     # Booleans
     _latesturl = False
     _new_filesurl = True
@@ -24,7 +27,7 @@ class Updater(object):
     _source_file_enabled = False
     _source_fileurl = False
 
-    def __init__(self, local_version_file="version.txt", latest_version_file="new_version.txt", latesturl=False, new_files=[], new_filesurl=True, output=True, source_file="", source_file_enabled=True, source_fileurl=True):
+    def __init__(self, local_version_file="version.txt", latest_version_file="new_version.txt", latesturl=False, new_files=[], new_filesurl=True, output=True, source_file="", source_file_enabled=True, source_fileurl=True, files_offset=0):
         ## Verify the types of all variables
         # Verify the type of local_version_file
         if type(local_version_file) is str:
@@ -71,6 +74,11 @@ class Updater(object):
             self._source_fileurl = source_fileurl
         else:
             raise TypeError("Expected boolean for source_fileurl, got {}.".format(type(source_fileurl)))
+        # Verify the type of files_offset
+        if type(files_offset) is int:
+            self._files_offset = files_offset
+        else:
+            raise TypeError("Expected int for files_offset, got {}.".format(type(files_offset)))
     
     def get_local_version_file(self):
         """Returns the location of the local version file."""
@@ -83,6 +91,10 @@ class Updater(object):
     def get_source_file(self):
         """Returns the location of the source file to use if the feature is enabled."""
         return self._source_file
+
+    def get_files_offset(self):
+        """Returns the amount of folders into a URL to go."""
+        return self._files_offset
 
     def get_latesturl_status(self):
         """Returns a boolean of whether or not latest_version_file contains a URL."""
@@ -138,6 +150,14 @@ class Updater(object):
         else:
             raise TypeError("Expected str for source_file, got {}.".format(type(source_file)))
     
+    def set_files_offset(self, files_offset):
+        """Set the amount of folders into a URL to go."""
+        # Verify the type of files_offset
+        if type(files_offset) is int:
+            self._files_offset = files_offset
+        else:
+            raise TypeError("Expected int for files_offset, got {}.".format(type(files_offset)))
+
     def toggle_latesturl(self):
         """Toggles the boolean of whether or not latest_version_file contains a URL."""
         # Simple toggle for booleans
@@ -208,12 +228,10 @@ class Updater(object):
                 # Read the file line-by-line
                 f = open(self._source_file)
                 lines = f.readlines()
-                print(lines)
                 for i in range(0, len(lines)):
                     if lines[i][-1:] == "\n":
                         lines[i] = lines[i][:-1]
                 self._new_files = lines
-                print(self._new_files)
 
         delete = False
         files_to_delete = []
@@ -223,14 +241,12 @@ class Updater(object):
                 print("Files are online.")
             # For each new file in array
             for item in self._new_files:
-                if self._output:
-                    print(item)
                 # Check if the files listed should be deleted
                 if item[:8] == "[DELETE]":
                     delete = True
                 if not delete:
                     # Set the target location to output to
-                    fname = item.split("/", 3)[-1:][0]
+                    fname = item.split("/", 3+self._files_offset)[-1:][0]
                     # Create the directories for the file if they don't exist
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     # Read the file line-by-line

@@ -22,7 +22,7 @@ What each class variable means.
                 latesturl=False, new_files=[],
                 new_filesurl=True, output=True,
                 source_file="", source_file_enabled=True,
-                source_fileurl=True)
+                source_fileurl=True, files_offset=0)
         """
         local_version_file: The downloaded version of the software.
         Should contain a number, like 1, 1.2, 1.234.
@@ -36,6 +36,7 @@ What each class variable means.
         are stored).
         source_file_enabled: Boolean. Whether or not to use the source file feature.
         source_fileurl: Whether or not the source file is stored online.
+        files_offset: Integer. Contains the folder offset to add to URLs when pulling from online. (eg. If the url is http://files.net/files/source/file.txt, and files_offset is 1, it will be pulled into /source/file.txt. If the offset is 2, it will not be stored in an extra folder.)
         """
 
 ### Initialize the updater
@@ -76,6 +77,7 @@ Pretty easy to guess what they do, they just use the variable names in the funct
     get_local_version_file()
     get_latest_version_file()
     get_latesturl_status()
+    get_files_offset()
     get_new_filesurl_status()
     get_output_status()
     get_local_version()
@@ -86,6 +88,7 @@ Pretty easy to guess what they do, they just use the variable names in the funct
     set_local_version_file(local_version_file)
     set_latest_version_file(latest_version_file)
     set_source_file(source_file)
+    set_files_offset()
     toggle_latesturl()
     toggle_new_filesurl()
     toggle_output()
