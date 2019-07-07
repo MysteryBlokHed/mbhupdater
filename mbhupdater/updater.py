@@ -224,6 +224,13 @@ class Updater(object):
             if self._source_fileurl:
                 # Read the file line-by-line
                 self._new_files = urllib.request.urlopen(self._source_file).readlines()
+                # Convert it to be usable
+                for i in range(len(self._new_files)):
+                    try:
+                        self._new_files[i] = self._new_files[i].decode()
+                    except:
+                        # Oops, it won't work :(
+                        pass
             else:
                 # Read the file line-by-line
                 f = open(self._source_file)
@@ -247,6 +254,8 @@ class Updater(object):
                 if not delete:
                     # Set the target location to output to
                     fname = item.split("/", 3+self._files_offset)[-1:][0]
+                    # Remove line endings
+                    fname = fname.split("\r")[0].split("\n")[0]
                     # Create the directories for the file if they don't exist
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     # Read the file line-by-line
@@ -310,7 +319,7 @@ class Updater(object):
                 print("Outdated version detected. Updating...")
             self.pull_files()
             f = open(self._local_version_file, "w+")
-            f.writelines(self._latest_version)
+            f.writelines(str(self._latest_version))
             f.close()
             return True
         else:
