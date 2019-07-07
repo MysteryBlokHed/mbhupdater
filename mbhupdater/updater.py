@@ -319,6 +319,12 @@ class Updater(object):
                 print("Outdated version detected. Updating...")
             self.pull_files()
             f = open(self._local_version_file, "w+")
+            # Attempt to decode the latest version
+            try:
+                self._latest_version = self._latest_version.decode()
+            except:
+                # Oof
+                pass
             f.writelines(str(self._latest_version))
             f.close()
             return True
