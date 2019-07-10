@@ -3,30 +3,6 @@ import urllib.request
 import os
 
 class Updater(object):
-    # Location of the local and latest version files
-    _local_version_file = ""
-    _latest_version_file = ""
-
-    # Versions
-    _local_version = ""
-    _latest_version = ""
-
-    # Location of the files to pull for update
-    _new_files = []
-
-    # Location of the source file (if enabled)
-    _source_file = ""
-
-    # Offset thing
-    _files_offset = 3
-
-    # Booleans
-    _latesturl = False
-    _new_filesurl = True
-    _output = True
-    _source_file_enabled = False
-    _source_fileurl = False
-
     def __init__(self, local_version_file="version.txt", latest_version_file="new_version.txt", latesturl=False, new_files=[], new_filesurl=True, output=True, source_file="", source_file_enabled=True, source_fileurl=True, files_offset=0):
         ## Verify the types of all variables
         # Verify the type of local_version_file
@@ -255,7 +231,7 @@ class Updater(object):
                     # Set the target location to output to
                     fname = item.split("/", 3+self._files_offset)[-1:][0]
                     # Remove line endings
-                    fname = fname.split("\r")[0].split("\n")[0]
+                    fname = fname.strip("\n").strip("\r")
                     # Create the directories for the file if they don't exist
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     # Read the file line-by-line

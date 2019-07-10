@@ -44,7 +44,7 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     # Set the target location to output to
                     fname = self._new_files[i].split("/", 3+self._files_offset)[-1:][0]
                     # Remove line endings
-                    fname = fname.split("\r")[0].split("\n")[0]
+                    fname = fname.strip("\n").strip("\r")
                     # Create the directories for the file if they don't exist
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     # Read the file line-by-line
