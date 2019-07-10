@@ -6,7 +6,7 @@ Not for use as a GIT alternative for backend programming.
 This is a fairly simple program that will copy files from online and keep the file structure. For example, if you have `/path/to/file/code.txt` and `/path/to/code.txt`, it will keep those files in those folders locally.
 
 ## Requirements
-**Python v3+**  
+**Python v3.6+**  
 If you don't already have it, download it [here](https://www.python.org/downloads/).  
 **tqdm if you're using tqdm_updater**  
 Download using `pip install tqdm`, or download the latest wheel [here](https://pypi.org/project/tqdm/#files) and use `pip install (.whl file)`.

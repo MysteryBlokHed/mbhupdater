@@ -33,52 +33,52 @@ class Updater(object):
         if type(local_version_file) is str:
             self._local_version_file = local_version_file
         else:
-            raise TypeError("Expected string for local_version_file, got {}.".format(type(local_version_file)))
+            raise TypeError(f"Expected string for local_version_file, got {type(local_version_file)}.")
         # Verify the type of latest_version_file
         if type(latest_version_file) is str:
             self._latest_version_file = latest_version_file
         else:
-            raise TypeError("Expected string for latest_version_file, got {}.".format(type(latest_version_file)))
+            raise TypeError(f"Expected string for latest_version_file, got {type(latest_version_file)}.")
         # Verify the type of new_files
         if type(new_files) is list:
             self._new_files = new_files
         else:
-            raise TypeError("Expected list for new_files, got {}.".format(type(new_files)))
+            raise TypeError(f"Expected list for new_files, got {type(new_files)}.")
         # Verify the type of source_file
         if type(source_file) is str:
             self._source_file = source_file
         else:
-            raise TypeError("Expected str for source_file, got {}.".format(type(source_file)))
+            raise TypeError(f"Expected str for source_file, got {type(source_file)}.")
         # Verify the type of latesturl
         if type(latesturl) is bool:
             self._latesturl = latesturl
         else:
-            raise TypeError("Expected boolean for latesturl, got {}.".format(type(latesturl)))
+            raise TypeError(f"Expected boolean for latesturl, got {type(latesturl)}.")
         # Verify the type of new_filesurl
         if type(new_filesurl) is bool:
             self._new_filesurl = new_filesurl
         else:
-            raise TypeError("Expected boolean for new_filesurl, got {}.".format(type(new_filesurl)))
+            raise TypeError(f"Expected boolean for new_filesurl, got {type(new_filesurl)}.")
         # Verify the type of output
         if type(output) is bool:
             self._output = output
         else:
-            raise TypeError("Expected boolean for output, got {}.".format(type(output)))
+            raise TypeError(f"Expected boolean for output, got {type(output)}.")
         # Verify the type of source_file_enabled
         if type(source_file_enabled) is bool:
             self._source_file_enabled = source_file_enabled
         else:
-            raise TypeError("Expected boolean for source_file_enabled, got {}.".format(type(source_file_enabled)))
+            raise TypeError(f"Expected boolean for source_file_enabled, got {type(source_file_enabled)}.")
         # Verify the type of source_fileurl
         if type(source_fileurl) is bool:
             self._source_fileurl = source_fileurl
         else:
-            raise TypeError("Expected boolean for source_fileurl, got {}.".format(type(source_fileurl)))
+            raise TypeError(f"Expected boolean for source_fileurl, got {type(source_fileurl)}.")
         # Verify the type of files_offset
         if type(files_offset) is int:
             self._files_offset = files_offset
         else:
-            raise TypeError("Expected int for files_offset, got {}.".format(type(files_offset)))
+            raise TypeError(f"Expected int for files_offset, got {type(files_offset)}.")
     
     def get_local_version_file(self):
         """Returns the location of the local version file."""
@@ -132,7 +132,7 @@ class Updater(object):
         if type(local_version_file) is str:
             self._local_version_file = local_version_file
         else:
-            raise TypeError("Expected string for local_version_file, got {}.".format(type(local_version_file)))
+            raise TypeError(f"Expected string for local_version_file, got {type(local_version_file)}.")
     
     def set_latest_version_file(self, latest_version_file):
         """Set the location of the latest version file."""
@@ -140,7 +140,7 @@ class Updater(object):
         if type(latest_version_file) is str:
             self._latest_version_file = latest_version_file
         else:
-            raise TypeError("Expected string for latest_version_file, got {}.".format(type(latest_version_file)))
+            raise TypeError(f"Expected string for latest_version_file, got {type(latest_version_file)}.")
     
     def set_source_file(self, source_file):
         """Set the location of the source file to use if the feature is enabled."""
@@ -148,7 +148,7 @@ class Updater(object):
         if type(source_file) is str:
             self._source_file = source_file
         else:
-            raise TypeError("Expected str for source_file, got {}.".format(type(source_file)))
+            raise TypeError(f"Expected str for source_file, got {type(source_file)}.")
     
     def set_files_offset(self, files_offset):
         """Set the amount of folders into a URL to go."""
@@ -156,7 +156,7 @@ class Updater(object):
         if type(files_offset) is int:
             self._files_offset = files_offset
         else:
-            raise TypeError("Expected int for files_offset, got {}.".format(type(files_offset)))
+            raise TypeError(f"Expected int for files_offset, got {type(files_offset)}.")
 
     def toggle_latesturl(self):
         """Toggles the boolean of whether or not latest_version_file contains a URL."""
@@ -261,7 +261,7 @@ class Updater(object):
                     # Read the file line-by-line
                     lines = urllib.request.urlopen(item).readlines()
                     if self._output:
-                        print("Read file from {}".format(fname))
+                        print(f"Read file from {fname}.")
                     # Whether or not the file is stored as bytes
                     b = False
                     # Sometimes breaks, but from testing it seems fine to skip.
@@ -272,7 +272,7 @@ class Updater(object):
                         pass
                     # Write the contents of the new file to the working directory.
                     if self._output:
-                        print("\nWriting file {}...".format(fname))
+                        print(f"\nWriting file {fname}...")
                     # Opens the file differently if it is of type bytes.
                     if b:
                         f = open(fname, "wb+")
@@ -280,7 +280,7 @@ class Updater(object):
                         f = open(fname, "w+")
                     f.writelines(lines)
                     if self._output:
-                        print("Wrote file {}.".format(fname))
+                        print(f"Wrote file {fname}.")
                 else:
                     if not item[:8] == "[DELETE]":
                         files_to_delete.append(item)
@@ -293,12 +293,12 @@ class Updater(object):
                 # Read the file line-by-line
                 lines = open(item, "r").readlines()
                 if self._output:
-                    print("Read file from {}".format(fname))
+                    print(f"Read file from {fname}.")
                 # Write the contents of the new file to the working directory.
                 f = open(fname, "w+")
                 f.writelines(lines)
                 if self._output:
-                    print("Wrote file {}.".format(fname))
+                    print(f"Wrote file {fname}.")
                 f.close()
         # Delete the files marked
         if self._output:
@@ -306,7 +306,7 @@ class Updater(object):
         for item in files_to_delete:
             if os.path.isfile("./"+item):
                 if self._output:
-                    print("Deleting file {}...".format(item))
+                    print(f"Deleting file {item}...")
                 os.remove("./"+item)
     
     def compare_and_pull(self):

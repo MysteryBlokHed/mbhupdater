@@ -49,7 +49,7 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     os.makedirs(os.path.dirname(fname), exist_ok=True)
                     # Read the file line-by-line
                     lines = urllib.request.urlopen(self._new_files[i]).readlines()
-                    tqdm.write(" Read file from {}".format(fname))
+                    tqdm.write(f"Read file from {fname}.")
                     # Whether or not the file is stored as bytes
                     b = False
                     # Sometimes breaks, but from testing it seems fine to skip.
@@ -59,14 +59,14 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     except:
                         pass
                     # Write the contents of the new file to the working directory.
-                    tqdm.write("\nWriting file {}...".format(fname))
+                    tqdm.write(f"\nWriting file {fname}...")
                     # Opens the file differently if it is of type bytes.
                     if b:
                         f = open(fname, "wb+")
                     else:
                         f = open(fname, "w+")
                     f.writelines(lines)
-                    tqdm.write("Wrote file {}.".format(fname))
+                    tqdm.write(f"Wrote file {fname}.")
                 else:
                     if not self._new_files[i][:8] == "[DELETE]":
                         files_to_delete.append(self._new_files[i])
@@ -77,23 +77,23 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                 fname = self._new_files[i].split("/")[-1:][0]
                 # Read the file line-by-line
                 lines = open(self._new_files[i], "r").readlines()
-                tqdm.write("Read file from {}".format(fname))
+                tqdm.write(f"Read file from {fname}.")
                 # Whether or not the file is stored as bytes
                 b = False
                 if type(lines[0]) is bytes:
                     b = True
                 # Write the contents of the new file to the working directory.
-                tqdm.write("\nWriting file from {}...".format(fname))
+                tqdm.write(f"\nWriting file from {fname}...")
                 # Opens the file differently if it is of type bytes.
                 if b:
                     f = open(fname, "wb+")
                 else:
                     f = open(fname, "w+")
                 f.writelines(lines)
-                tqdm.write("Wrote file {}.".format(fname))
+                tqdm.write(f"Wrote file {fname}.")
         # Delete the files marked
         tqdm.write("Deletinng old files...")
         for i in tqdm(range(len(files_to_delete))):
             if os.path.isfile("./"+files_to_delete[i]):
-                tqdm.write("Deleting file {}...".format(files_to_delete[i]))
+                tqdm.write(f"Deleting file {files_to_delete[i]}...")
                 os.remove("./"+files_to_delete[i])
