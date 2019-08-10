@@ -1,6 +1,7 @@
 # Created by MysteryBlokHed in 2019.
 import urllib.request
 import os
+import shutil
 
 class Updater(object):
     def __init__(self, local_version_file="version.txt", latest_version_file="new_version.txt", latesturl=False, new_files=[], new_filesurl=True, output=True, source_file="", source_file_enabled=True, source_fileurl=True, files_offset=0):
@@ -248,7 +249,7 @@ class Updater(object):
                         pass
                     # Write the contents of the new file to the working directory.
                     if self._output:
-                        print(f"\nWriting file {fname}...")
+                        print(f"Writing file {fname}...")
                     # Opens the file differently if it is of type bytes.
                     if b:
                         f = open(fname, "wb+")
@@ -276,14 +277,22 @@ class Updater(object):
                 if self._output:
                     print(f"Wrote file {fname}.")
                 f.close()
+        
         # Delete the files marked
         if self._output:
             print("Deleting old files...")
         for item in files_to_delete:
-            if os.path.isfile("./"+item):
-                if self._output:
-                    print(f"Deleting file {item}...")
-                os.remove("./"+item)
+            # Check if the item is a file or folder
+            if item.strip("\n").strip("\r")[-1] == "/": # Remove line endings to check last character
+                if os.path.isdir(item.strip("\n").strip("\r").strip("/")):
+                    if self._output:
+                        print(f"Deleting folder {item}...")
+                    shutil.rmtree(item.strip("\n").strip("\r").strip("/"))
+            else:
+                if os.path.isfile("./"+item):
+                    if self._output:
+                        print(f"Deleting file {item}...")
+                    os.remove("./"+item)
     
     def compare_and_pull(self):
         """Compares the versions. If the current version is older, it will update the current files.

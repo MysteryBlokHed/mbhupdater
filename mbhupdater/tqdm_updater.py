@@ -3,6 +3,7 @@ from tqdm import tqdm
 import mbhupdater.updater
 import urllib.request
 import os
+import shutil
 
 # Subclass of normal Updater to avoid unneccessary rewriting of code.
 class TQDMUpdater(mbhupdater.updater.Updater):
@@ -59,7 +60,7 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     except:
                         pass
                     # Write the contents of the new file to the working directory.
-                    tqdm.write(f"\nWriting file {fname}...")
+                    tqdm.write(f"Writing file {fname}...")
                     # Opens the file differently if it is of type bytes.
                     if b:
                         f = open(fname, "wb+")
@@ -83,7 +84,7 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                 if type(lines[0]) is bytes:
                     b = True
                 # Write the contents of the new file to the working directory.
-                tqdm.write(f"\nWriting file from {fname}...")
+                tqdm.write(f"Writing file from {fname}...")
                 # Opens the file differently if it is of type bytes.
                 if b:
                     f = open(fname, "wb+")
@@ -91,9 +92,16 @@ class TQDMUpdater(mbhupdater.updater.Updater):
                     f = open(fname, "w+")
                 f.writelines(lines)
                 tqdm.write(f"Wrote file {fname}.")
+        
         # Delete the files marked
         tqdm.write("Deletinng old files...")
         for i in tqdm(range(len(files_to_delete))):
-            if os.path.isfile("./"+files_to_delete[i]):
-                tqdm.write(f"Deleting file {files_to_delete[i]}...")
-                os.remove("./"+files_to_delete[i])
+            # Check if the item is a file or folder
+            if files_to_delete[i].strip("\n").strip("\r")[-1] == "/": # Remove line endings to check last character
+                if os.path.isdir(files_to_delete[i].strip("\n").strip("\r").strip("/")):
+                    tqdm.write(f"Deleting folder {files_to_delete[i]}...")
+                    shutil.rmtree(files_to_delete[i].strip("\n").strip("\r").strip("/"))
+            else:
+                if os.path.isfile("./"+files_to_delete[i]):
+                    tqdm.write(f"Deleting file {files_to_delete[i]}...")
+                    os.remove("./"+files_to_delete[i])
