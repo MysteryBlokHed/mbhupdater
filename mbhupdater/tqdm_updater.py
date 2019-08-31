@@ -11,26 +11,7 @@ class TQDMUpdater(mbhupdater.updater.Updater):
         """Not recommended unless you don't want to update the version file locally.
         Pulls all files to the working directory."""
         # Import the source file, if enabled.
-        if self._source_file_enabled:
-            # Does different things if the source file is online or not.
-            if self._source_fileurl:
-                # Read the file line-by-line
-                self._new_files = urllib.request.urlopen(self._source_file).readlines()
-                # Convert it to be usable
-                for i in range(len(self._new_files)):
-                    try:
-                        self._new_files[i] = self._new_files[i].decode()
-                    except:
-                        # Oops, it won't work :(
-                        pass
-            else:
-                # Read the file line-by-line
-                f = open(self._source_file)
-                lines = f.readlines()
-                for i in range(0, len(lines)):
-                    if lines[i][-1:] == "\n":
-                        lines[i] = lines[i][:-1]
-                self._new_files = lines
+        self._get_source_file()
 
         delete = False
         files_to_delete = []

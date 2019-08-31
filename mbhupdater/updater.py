@@ -181,21 +181,7 @@ class Updater(object):
         self._local_version = local.readlines()[0]
         local.close()
     
-    def compare_versions(self):
-        """Returns True if the versions match, and False if they don't. Throws an error if the local version is newer."""
-        self.read_files()
-
-        if float(self._latest_version) == float(self._local_version):
-            return True
-        elif float(self._latest_version) > float(self._local_version):
-            return False
-        else:
-            raise ValueError("Local version is newer than the latest version listed, consider updating the latest version file.")
-
-    def pull_files(self):
-        """Not recommended unless you don't want to update the version file locally.
-        Pulls all files to the working directory."""
-        # Import the source file, if enabled.
+    def _get_source_file(self):
         if self._source_file_enabled:
             # Does different things if the source file is online or not.
             if self._source_fileurl:
@@ -216,6 +202,23 @@ class Updater(object):
                     if lines[i][-1:] == "\n":
                         lines[i] = lines[i][:-1]
                 self._new_files = lines
+
+    def compare_versions(self):
+        """Returns True if the versions match, and False if they don't. Throws an error if the local version is newer."""
+        self.read_files()
+
+        if float(self._latest_version) == float(self._local_version):
+            return True
+        elif float(self._latest_version) > float(self._local_version):
+            return False
+        else:
+            raise ValueError("Local version is newer than the latest version listed, consider updating the latest version file.")
+
+    def pull_files(self):
+        """Not recommended unless you don't want to update the version file locally.
+        Pulls all files to the working directory."""
+        # Import the source file, if enabled.
+        self._get_source_file()
 
         delete = False
         files_to_delete = []
