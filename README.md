@@ -5,6 +5,8 @@ Not for use as a GIT alternative for backend programming.
 ## Overview
 This is a fairly simple program that will copy files from online and keep the file structure. For example, if you have `/path/to/file/code.txt` and `/path/to/code.txt`, it will keep those files in those folders locally.
 
+**Install this package using `pip install mbhupdater`, or download the latest wheel [here](https://pypi.org/project/mbhupdater/#files) and use `pip install (.whl file)`.**
+
 ## Requirements
 **Python v3.6+**  
 If you don't already have it, download it [here](https://www.python.org/downloads/).  
